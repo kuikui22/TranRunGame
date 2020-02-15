@@ -1,6 +1,3 @@
-import { HeroAct } from "./Common/GameConst";
-import GameMgr from "./GameMgr";
-
 const {ccclass, property} = cc._decorator;
 
 @ccclass
@@ -19,13 +16,11 @@ export default class Hero extends cc.Component {
     }
 
     public run():void {
-        cc.log('hero run...');
         this.node.y = this._posY;
         this._animation.play('run');
     }
 
     public jump():void {        
-        cc.log('hero jump...');
         let self = this;
         this._animation.play('jump');
         this.node.runAction(cc.sequence(
@@ -39,8 +34,6 @@ export default class Hero extends cc.Component {
     }
 
     public roll():void {
-        cc.log('hero roll...');
-        let self = this;
         this._animation.play('roll');
         this.node.y = this._posY-8;
     }
