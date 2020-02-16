@@ -1,9 +1,12 @@
+import { HeroAct } from "./Common/GameConst";
+
 const {ccclass, property} = cc._decorator;
 
 @ccclass
 export default class Hero extends cc.Component {
 
     _animation:cc.Animation = null;
+    _animState:any = null;
     _posX:number = -92;
     _posY:number = -57;
 
@@ -16,13 +19,17 @@ export default class Hero extends cc.Component {
     }
 
     public run():void {
+        this._animState = this._animation.play(HeroAct.RUN);
         this.node.y = this._posY;
-        this._animation.play('run');
     }
 
-    public jump():void {        
+    public jump():void {      
+        if(this._animState.name == HeroAct.JUMP && this._animState.isPlaying) {
+            return;
+        }
+
         let self = this;
-        this._animation.play('jump');
+        this._animState = this._animation.play(HeroAct.JUMP);
         this.node.runAction(cc.sequence(
             cc.moveTo(0.3 ,cc.v2(this._posX, this._posY+60)),
             cc.moveTo(0.2 ,cc.v2(this._posX, this._posY)),
@@ -34,7 +41,7 @@ export default class Hero extends cc.Component {
     }
 
     public roll():void {
-        this._animation.play('roll');
+        this._animState = this._animation.play(HeroAct.ROLL);
         this.node.y = this._posY-8;
     }
 
