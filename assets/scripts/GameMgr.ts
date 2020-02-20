@@ -1,5 +1,3 @@
-import { HeroAct } from "./Common/GameConst";
-
 const {ccclass, property} = cc._decorator;
 
 @ccclass
@@ -33,8 +31,7 @@ export default class GameMgr extends cc.Component {
 		return this.instance;
 	}
     
-    onLoad () {
-        
+    onLoad () {        
         this.addEvent();
     }
 
@@ -45,7 +42,7 @@ export default class GameMgr extends cc.Component {
     }
 
     private addEvent():void {
-        this.jumpBtn.on('click', this.clickJumpBtn, this);
+        this.jumpBtn.on(cc.Node.EventType.TOUCH_START, this.clickJumpBtn, this);
         this.rollBtn.on(cc.Node.EventType.TOUCH_START, this.clickRollBtn, this);
         this.rollBtn.on(cc.Node.EventType.TOUCH_END, this.clickRollBtnEnd, this);
     }
@@ -57,18 +54,6 @@ export default class GameMgr extends cc.Component {
         this._hero.scale = 0.5;
         this._hero.setPosition(-92, -57);
         this._heroScript = this._hero.getComponent('Hero');
-
-        // let self = this;        
-        // cc.loader.loadRes("prefab/Hero", function (err, prefab) {
-        //     if(err) {
-        //         cc.log(err);
-        //     } else {
-        //         self._hero = cc.instantiate(prefab);
-        //         self.node.addChild(self._hero);
-        //         self._hero.scale = 0.5;
-        //         self._hero.setPosition(-92, -57);
-        //     }
-        // });
     }
 
     public clickJumpBtn():void {
@@ -79,7 +64,7 @@ export default class GameMgr extends cc.Component {
         this._heroScript.roll();
     }
 
-    public clickRollBtnEnd(): void {
+    public clickRollBtnEnd():void {
         this._heroScript.run();
     }
 
