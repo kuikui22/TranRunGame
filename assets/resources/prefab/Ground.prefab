@@ -88,7 +88,7 @@
       "__uuid__": "bd2256e8-f1a9-4677-9596-bed84fda5aa7"
     },
     "_type": 0,
-    "_sizeMode": 1,
+    "_sizeMode": 0,
     "_fillType": 0,
     "_fillCenter": {
       "__type__": "cc.Vec2",
