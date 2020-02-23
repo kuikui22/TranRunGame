@@ -37,6 +37,7 @@ export default class GameMgr extends cc.Component {
 
     start () {
 
+        this.init();
         //TODO: 場景倒數計時、遊戲開始動畫
         this.initHero();
     }
@@ -45,6 +46,11 @@ export default class GameMgr extends cc.Component {
         this.jumpBtn.on(cc.Node.EventType.TOUCH_START, this.clickJumpBtn, this);
         this.rollBtn.on(cc.Node.EventType.TOUCH_START, this.clickRollBtn, this);
         this.rollBtn.on(cc.Node.EventType.TOUCH_END, this.clickRollBtnEnd, this);
+    }
+
+    private init():void {
+        cc.director.getCollisionManager().enabled = true;
+        // cc.director.getCollisionManager().enabledDebugDraw = true;
     }
 
     //prefab載入角色
@@ -67,6 +73,8 @@ export default class GameMgr extends cc.Component {
     public clickRollBtnEnd():void {
         this._heroScript.run();
     }
+
+    //TODO: 用角色落地的座標與地板座標
 
     // update (dt) {}
 }

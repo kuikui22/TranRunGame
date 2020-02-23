@@ -3,7 +3,7 @@ import { GroundsPos } from "./Common/GameConst";
 const {ccclass, property} = cc._decorator;
 
 @ccclass
-export default class NewClass extends cc.Component {
+export default class GroundMgr extends cc.Component {
 
     @property(cc.Prefab)
     groundPrefab:cc.Prefab = null;
@@ -18,7 +18,7 @@ export default class NewClass extends cc.Component {
     private _endPosX = -240;
     private _speed = -200;
     private _gNodeLimit = -520;
-    private _gNodeResetX = 1070;
+    private _gNodeResetX = 1080;
     private _groundScale = 0.5;
     private _groundPools:cc.NodePool = new cc.NodePool();
 
@@ -100,11 +100,15 @@ export default class NewClass extends cc.Component {
             let x = this.groundsNode[i].x;
 
             if(x <= this._gNodeLimit) {
-                x = this._gNodeResetX;
-            }         
-            
-            x += Math.floor(this._speed * dt);
-                            
+                
+                let index = (i - 1 < 0) ? max - 1 : i - 1;
+                
+                // x = this._gNodeResetX;
+                x = this.groundsNode[index].x + (this.groundsNode[i].width);
+                // cc.log(this.groundsNode[index].x, x, i);
+            }
+
+            x += this._speed * dt;         
             this.groundsNode[i].x = x;
         }     
     }

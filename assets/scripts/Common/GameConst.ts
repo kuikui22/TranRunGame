@@ -7,6 +7,11 @@ export const HeroAct = {
     ROLL: "roll"
 };
 
+export const HeroStatus = {
+    DEAD: 0,
+    PLAY: 1,
+};
+
 export const GroundsPos = [
     // [1, 1, 1, 1, 1, 1, 1, 1, 1],
     // [1, 1, 1, 1, 1, 1, 1, 1, 1],
