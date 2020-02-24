@@ -1,4 +1,6 @@
-import { GroundsPos } from "./Common/GameConst";
+import { GroundsPos, GameConst } from "./Common/GameConst";
+import GameMgr from "./GameMgr";
+import CommonFunc from "./Common/CommonFunc";
 
 const {ccclass, property} = cc._decorator;
 
@@ -21,6 +23,7 @@ export default class GroundMgr extends cc.Component {
     private _gNodeResetX = 1080;
     private _groundScale = 0.5;
     private _groundPools:cc.NodePool = new cc.NodePool();
+    public _gameMgr = null;
 
     onLoad () {
         this.initGroundPools();
@@ -95,21 +98,25 @@ export default class GroundMgr extends cc.Component {
     }
 
     update (dt) {
-        for(let i = 0, max = this.groundsNode.length; i < max; i++) {
 
-            let x = this.groundsNode[i].x;
+        if(CommonFunc.getGameStatus() !== GameConst.GAME_STATUS_END) {
+            for(let i = 0, max = this.groundsNode.length; i < max; i++) {
 
-            if(x <= this._gNodeLimit) {
-                
-                let index = (i - 1 < 0) ? max - 1 : i - 1;
-                
-                // x = this._gNodeResetX;
-                x = this.groundsNode[index].x + (this.groundsNode[i].width);
-                // cc.log(this.groundsNode[index].x, x, i);
-            }
+                let x = this.groundsNode[i].x;
 
-            x += this._speed * dt;         
-            this.groundsNode[i].x = x;
-        }     
+                if(x <= this._gNodeLimit) {
+                    
+                    let index = (i - 1 < 0) ? max - 1 : i - 1;
+                    
+                    // x = this._gNodeResetX;
+                    x = this.groundsNode[index].x + (this.groundsNode[i].width);
+                    // cc.log(this.groundsNode[index].x, x, i);
+                }
+
+                x += this._speed * dt;         
+                this.groundsNode[i].x = x;
+            }     
+
+        }
     }
 }

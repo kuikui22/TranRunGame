@@ -1,3 +1,6 @@
+import CommonFunc from "./Common/CommonFunc";
+import { GameConst } from "./Common/GameConst";
+
 const {ccclass, property} = cc._decorator;
 
 @ccclass
@@ -10,13 +13,20 @@ export default class GameMgr extends cc.Component {
     heroPrefab: cc.Prefab = null;
 
     @property(cc.Node)
+    GroundNode: cc.Node = null;
+
+    @property(cc.Node)
     jumpBtn: cc.Node = null;
 
     @property(cc.Node)
     rollBtn: cc.Node = null;
 
+    @property(cc.Node)
+    GameEndWindow: cc.Node = null;
+
     public _hero: cc.Node = null;
     public _heroScript = null;
+    private _status = GameConst.GAME_STATUS_FREE;
 
     private static instance: GameMgr = null;
 	/**
@@ -43,12 +53,14 @@ export default class GameMgr extends cc.Component {
     }
 
     private addEvent():void {
+        CommonFunc.getEventNode().on(GameConst.CHANGE_STATUS, this.changeStatus, this);
         this.jumpBtn.on(cc.Node.EventType.TOUCH_START, this.clickJumpBtn, this);
         this.rollBtn.on(cc.Node.EventType.TOUCH_START, this.clickRollBtn, this);
         this.rollBtn.on(cc.Node.EventType.TOUCH_END, this.clickRollBtnEnd, this);
     }
 
     private init():void {
+        CommonFunc.setGameMgr(this);
         cc.director.getCollisionManager().enabled = true;
         // cc.director.getCollisionManager().enabledDebugDraw = true;
     }
@@ -72,6 +84,25 @@ export default class GameMgr extends cc.Component {
 
     public clickRollBtnEnd():void {
         this._heroScript.run();
+    }
+
+    private changeStatus(status:GameConst):void {
+        cc.log("changeStatus", status);
+        this._status = status;
+
+        switch (this._status) {
+            case GameConst.GAME_STATUS_END:
+                //TODO: 顯示結束畫面
+                cc.log("GAME END !!!");
+                this.GameEndWindow.active = true;
+                break;        
+            default:
+                break;
+        }
+    }
+
+    public getStatus():GameConst {
+        return this._status;
     }
 
     //TODO: 用角色落地的座標與地板座標

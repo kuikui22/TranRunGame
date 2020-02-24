@@ -1,3 +1,5 @@
+import { GameConst } from "./Common/GameConst";
+import CommonFunc from "./Common/CommonFunc";
 
 const {ccclass, property} = cc._decorator;
 
@@ -23,17 +25,18 @@ export default class ScrollMgr extends cc.Component {
     }
 
     update (dt: number) {
+        if(CommonFunc.getGameStatus() !== GameConst.GAME_STATUS_END) {
+            for(let i = 0, max = this.moveChildren.length; i < max; i++) {
 
-        for(let i = 0, max = this.moveChildren.length; i < max; i++) {
+                let x = this.moveChildren[i].x;
+                
+                if(x <= this.limitX) {
+                    x = this.resetX;
+                }
 
-            let x = this.moveChildren[i].x;
-            
-            if(x <= this.limitX) {
-                x = this.resetX;
-            }
-
-            x += this.speed * dt;                
-            this.moveChildren[i].x = x;
-        }        
+                x += this.speed * dt;                
+                this.moveChildren[i].x = x;
+            }     
+        }   
     }
 }

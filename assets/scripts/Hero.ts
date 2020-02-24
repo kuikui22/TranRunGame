@@ -1,4 +1,5 @@
-import { HeroAct, HeroStatus } from "./Common/GameConst";
+import { HeroAct, HeroStatus, GameConst } from "./Common/GameConst";
+import CommonFunc from "./Common/CommonFunc";
 
 const {ccclass, property} = cc._decorator;
 
@@ -76,8 +77,12 @@ export default class Hero extends cc.Component {
                 this.node.stopAllActions();
                 this.node.runAction(
                     cc.moveTo(0.1 ,cc.v2(this._posX, this._posY-100))
-                );                
+                );       
+                
+                //TODO: 停掉animation動畫
+                
                 this.changeStatus(HeroStatus.DEAD);
+                CommonFunc.getEventNode().emit(GameConst.CHANGE_STATUS, GameConst.GAME_STATUS_END);
                 cc.log("GameOver....");
             }
 
