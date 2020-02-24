@@ -8,7 +8,7 @@ export default class Hero extends cc.Component {
     _animation:cc.Animation = null;
     _animState:any = null;
     _posX:number = -92;
-    _posY:number = -50;
+    _posY:number = -57;
     _status:number = HeroStatus.PLAY;
     _collidionNumber:number = 0;
     
@@ -45,7 +45,7 @@ export default class Hero extends cc.Component {
 
     public roll():void {
         this._animState = this._animation.play(HeroAct.ROLL);
-        this.node.y = this._posY-10;
+        this.node.y = this._posY-8;
     }
 
     onCollisionEnter(other:any, self:any) {
