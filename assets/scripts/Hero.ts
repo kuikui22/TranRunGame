@@ -123,7 +123,10 @@ export default class Hero extends cc.Component {
     }
 
     private dead():void {
-        cc.log("GameOver....");
+        if(this._status === HeroStatus.DEAD) {
+            return;
+        }
+
         let self = this;
 
         this.node.stopAllActions();
