@@ -11,9 +11,9 @@ export const HeroAct = {
     ROLL: "roll"
 };
 
-export const HeroStatus = {
-    DEAD: 0,
-    PLAY: 1,
+export enum HeroStatus {
+    DEAD = 0,
+    PLAY = 1,
 };
 
 export const GroundsPos = [

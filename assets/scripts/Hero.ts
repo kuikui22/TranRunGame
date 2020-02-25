@@ -10,7 +10,7 @@ export default class Hero extends cc.Component {
     _animState:any = null;
     _posX:number = -92;
     _posY:number = -57;
-    _status:number = HeroStatus.PLAY;
+    _status:HeroStatus = HeroStatus.PLAY;
     _collidionNumber:number = 0;
     
     onLoad() {
@@ -22,11 +22,19 @@ export default class Hero extends cc.Component {
     }
 
     public run():void {
+        if(this._status !== HeroStatus.PLAY) {
+           return; 
+        }
+
         this._animState = this._animation.play(HeroAct.RUN);
         this.node.y = this._posY;
     }
 
-    public jump():void {      
+    public jump():void {  
+        if(this._status !== HeroStatus.PLAY) {
+            return; 
+        }
+        
         if(this._animState.name == HeroAct.JUMP && this._animState.isPlaying) {
             return;
         }
@@ -38,13 +46,19 @@ export default class Hero extends cc.Component {
             cc.moveTo(0.3 ,cc.v2(this._posX, this._posY+60)),
             cc.moveTo(0.2 ,cc.v2(this._posX, this._posY-100)),
             cc.callFunc(function() {
-                // self.run();
+                if(self.node.y <= self._posY) {
+                    self.dead();
+                }
             })
         ));        
         
     }
 
     public roll():void {
+        if(this._status !== HeroStatus.PLAY) {
+            return; 
+        }
+
         this._animState = this._animation.play(HeroAct.ROLL);
         this.node.y = this._posY-8;
     }
@@ -71,35 +85,48 @@ export default class Hero extends cc.Component {
         if(this._collidionNumber <= 0) {
             // this.node.color = cc.Color.WHITE;
             this._collidionNumber = 0;
+            cc.log(this.node.y);
             
             //離開碰撞時下墜低於地板
             if(this.node.y <= this._posY) {
-                this.node.stopAllActions();
-                this.node.runAction(
-                    cc.moveTo(0.1 ,cc.v2(this._posX, this._posY-100))
-                );       
-                
-                //TODO: 停掉animation動畫
-                
-                this.changeStatus(HeroStatus.DEAD);
-                CommonFunc.getEventNode().emit(GameConst.CHANGE_STATUS, GameConst.GAME_STATUS_END);
-                cc.log("GameOver....");
+                this.dead();
             }
 
         }
 
     }
 
-    private changeStatus(status:number):void {
+    private changeStatus(status:HeroStatus):void {
         this._status = status;
+
+        switch (this._status) {
+            case HeroStatus.DEAD:
+                this.dead();
+                break;
+        
+            default:
+                break;
+        }
     }
 
     public getStatus():number {
         return this._status;
     }
 
-    //TODO: 角色狀態機
-    
+    private dead():void {
+        cc.log("GameOver....");
+        let self = this;
 
+        this.node.stopAllActions();
+        this._animation.stop();
+        this.node.runAction(cc.sequence(
+            cc.moveTo(0.1 ,cc.v2(this._posX, this._posY-100)),
+            cc.callFunc(function() {
+                self.changeStatus(HeroStatus.DEAD);
+                CommonFunc.getEventNode().emit(GameConst.CHANGE_STATUS, GameConst.GAME_STATUS_END);
+            })
+        ));       
+    }
+    
     // update (dt) {}
 }
