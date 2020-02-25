@@ -33,8 +33,9 @@ export default class ObstacleMgr extends cc.Component {
         let maxY = this.node.y + (this._height / 2);
         let minY = this.node.y - (this._height / 2);
         let hero = CommonFunc.getHero();
-        let heroPos = hero.convertToNodeSpaceAR(cc.v2(this.node.getPosition()));
-        cc.log(heroPos);
+        let curPos = hero.parent.convertToWorldSpaceAR(cc.v2(hero.getPosition()));
+        let heroPos = this.node.parent.convertToNodeSpaceAR(curPos);
+        // cc.log(heroPos);
         let heroPosX = heroPos.x;
         let heroPosY = heroPos.y;
 
