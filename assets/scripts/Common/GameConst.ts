@@ -6,10 +6,10 @@ export enum GameConst {
     CHANGE_HERO_STATUS = 'CHANGE_HERO_STATUS',
     GAME_END = 'GAME_END'
 };
-export const HeroAct = {
-    RUN: "run",
-    JUMP: "jump",
-    ROLL: "roll"
+export enum HeroAct {
+    RUN = "run",
+    JUMP = "jump",
+    ROLL = "roll"
 };
 
 export enum HeroStatus {
@@ -25,6 +25,12 @@ export const GroundsPos = [
     [1, 1, 1, 1, 0, 1, 0, 1, 1],
     [1, 0, 1, 1, 0, 1, 0, 1, 0],
     [1, 1, 0, 1, 0, 1, 0, 1, 0]
+];
+
+export const obstaclePos = [
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
 ];
 
 export const CoinPos = [

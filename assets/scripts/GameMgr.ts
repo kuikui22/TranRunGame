@@ -27,9 +27,13 @@ export default class GameMgr extends cc.Component {
     @property(cc.Node)
     restartBtn: cc.Node = null;
 
+    @property(cc.Node)
+    cutdownNode: cc.Node = null;
+
     public _hero: cc.Node = null;
     public _heroScript = null;
     private _status = GameConst.GAME_STATUS_FREE;
+    public _cutdownNum = 5;
 
     private static instance: GameMgr = null;
 	/**
@@ -53,6 +57,7 @@ export default class GameMgr extends cc.Component {
         this.init();
         //TODO: 場景倒數計時、遊戲開始動畫
         this.initHero();
+        this.playCutdownAnim();
     }
 
     private addEvent():void {
@@ -61,9 +66,6 @@ export default class GameMgr extends cc.Component {
         this.rollBtn.on(cc.Node.EventType.TOUCH_START, this.clickRollBtn, this);
         this.rollBtn.on(cc.Node.EventType.TOUCH_END, this.clickRollBtnEnd, this);
         this.restartBtn.on(cc.Node.EventType.TOUCH_END, this.clickRestartBtn, this);
-
-        //test
-        this.node.getChildByName("GameStartWindow").getChildByName('button').on(cc.Node.EventType.TOUCH_END, this.testStart, this);
     }
 
     private init():void {
@@ -97,11 +99,39 @@ export default class GameMgr extends cc.Component {
     public clickRestartBtn():void {
         this.changeStatus(GameConst.GAME_STATUS_FREE);
         this.GameEndWindow.active = false;
-        this.node.getChildByName("GameStartWindow").active = true;
     }
 
-    private playPrepareAnim():void {
-        //TODO: 播放倒數動畫
+    //播放倒數動畫
+    private playCutdownAnim():void {
+        let self = this;
+        let label = this.cutdownNode.getChildByName('label');
+        label.scale = 1;
+        label.stopAllActions();
+        label.getComponent(cc.Label).string = this._cutdownNum.toString();
+        let action = cc.scaleTo(0.5, 1.3);
+        let timeDelay = 0;
+        this.cutdownNode.active = true;
+
+        for(let i = this._cutdownNum - 1; i >= -1; i--) {
+
+            label.runAction(cc.sequence(
+                cc.delayTime(timeDelay),
+                action.easing(cc.easeBackOut()),
+                cc.scaleTo(0.5, 1),
+                cc.callFunc(function(target, num) {
+                    if(num < 0) {
+                        self.cutdownNode.active = false;                    
+                        self.changeStatus(GameConst.GAME_STATUS_PLAY);
+                        return;
+                    }
+
+                    target.getComponent(cc.Label).string = num;  
+
+                }, label, i)
+            ));
+
+            timeDelay += 1;
+        }        
     }
 
     private changeStatus(status:GameConst):void {
@@ -115,10 +145,10 @@ export default class GameMgr extends cc.Component {
                 this.GameEndWindow.active = true;
                 break;   
             case GameConst.GAME_STATUS_FREE:
-                CommonFunc.getEventNode().emit(GameConst.CHANGE_HERO_STATUS, HeroStatus.FREE);
+                this.readyGame();
                 break;   
             case GameConst.GAME_STATUS_PLAY:
-                CommonFunc.getEventNode().emit(GameConst.CHANGE_HERO_STATUS, HeroStatus.PLAY);
+                this.startGame();
                 break;    
             default:
                 break;
@@ -129,9 +159,15 @@ export default class GameMgr extends cc.Component {
         return this._status;
     }
 
-    public testStart():void {
-        this.changeStatus(GameConst.GAME_STATUS_PLAY);
-        this.node.getChildByName("GameStartWindow").active = false;
+    private readyGame():void {
+        cc.log('readyGame....');
+        this.playCutdownAnim();
+        CommonFunc.getEventNode().emit(GameConst.CHANGE_HERO_STATUS, HeroStatus.FREE);
+        this.GroundNode.getComponent('GroundMgr').resetGround();
+    }
+
+    private startGame():void {
+        CommonFunc.getEventNode().emit(GameConst.CHANGE_HERO_STATUS, HeroStatus.PLAY);
     }
 
     // update (dt) {}

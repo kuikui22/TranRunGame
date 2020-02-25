@@ -10,6 +10,9 @@ export default class GroundMgr extends cc.Component {
     @property(cc.Prefab)
     groundPrefab:cc.Prefab = null;
 
+    @property(cc.Prefab)
+    obstaclePrefab:cc.Prefab = null;
+
     @property(cc.Node)
     groundsNode:cc.Node[] = [];
 
@@ -24,6 +27,14 @@ export default class GroundMgr extends cc.Component {
     private _groundScale = 0.5;
     private _groundPools:cc.NodePool = new cc.NodePool();
     public _gameMgr = null;
+
+
+    //路障
+    private obstacleY = 51;
+
+
+
+
 
     onLoad () {
         this.initGroundPools();
@@ -98,11 +109,18 @@ export default class GroundMgr extends cc.Component {
     }
 
     private resetGround():void {
+        cc.log("resetGround");
+
         for(let i = 0, max = this.groundsNode.length; i < max; i++) {
-            for(let j = this.groundsNode[i].childrenCount-1, jMax = 0; j--) {
-                this.putGround(this.groundsNode[i][j]);
-            }
+            this.groundsNode[i].x = this._gNodeLimit + (this.groundsNode[i].width * i)
+
+            // for(let j = this.groundsNode[i].childrenCount-1, jMax = 0; j >= jMax; j--) {
+            //     cc.log(this.groundsNode[i].children[j]);
+            //     this.putGround(this.groundsNode[i].children[j]);
+            // }
         }
+
+        // this.initGrounds();
     }
 
     update (dt) {
@@ -110,8 +128,7 @@ export default class GroundMgr extends cc.Component {
         if(CommonFunc.getGameStatus() === GameConst.GAME_STATUS_END) {
             return;
         } else if(CommonFunc.getGameStatus() === GameConst.GAME_STATUS_FREE) {
-            this.resetGround();
-            this.initGrounds();
+            return;          
         } else if(CommonFunc.getGameStatus() === GameConst.GAME_STATUS_PLAY) {
             for(let i = 0, max = this.groundsNode.length; i < max; i++) {
 
