@@ -1,5 +1,5 @@
 import CommonFunc from "./Common/CommonFunc";
-import { GameConst } from "./Common/GameConst";
+import { GameConst, HeroStatus } from "./Common/GameConst";
 
 const {ccclass, property} = cc._decorator;
 
@@ -23,6 +23,9 @@ export default class GameMgr extends cc.Component {
 
     @property(cc.Node)
     GameEndWindow: cc.Node = null;
+
+    @property(cc.Node)
+    restartBtn: cc.Node = null;
 
     public _hero: cc.Node = null;
     public _heroScript = null;
@@ -57,11 +60,16 @@ export default class GameMgr extends cc.Component {
         this.jumpBtn.on(cc.Node.EventType.TOUCH_START, this.clickJumpBtn, this);
         this.rollBtn.on(cc.Node.EventType.TOUCH_START, this.clickRollBtn, this);
         this.rollBtn.on(cc.Node.EventType.TOUCH_END, this.clickRollBtnEnd, this);
+        this.restartBtn.on(cc.Node.EventType.TOUCH_END, this.clickRestartBtn, this);
+
+        //test
+        this.node.getChildByName("GameStartWindow").getChildByName('button').on(cc.Node.EventType.TOUCH_END, this.testStart, this);
     }
 
     private init():void {
         CommonFunc.setGameMgr(this);
         cc.director.getCollisionManager().enabled = true;
+        this.GameEndWindow.active = false;
         // cc.director.getCollisionManager().enabledDebugDraw = true;
     }
 
@@ -86,6 +94,16 @@ export default class GameMgr extends cc.Component {
         this._heroScript.run();
     }
 
+    public clickRestartBtn():void {
+        this.changeStatus(GameConst.GAME_STATUS_FREE);
+        this.GameEndWindow.active = false;
+        this.node.getChildByName("GameStartWindow").active = true;
+    }
+
+    private playPrepareAnim():void {
+        //TODO: 播放倒數動畫
+    }
+
     private changeStatus(status:GameConst):void {
         cc.log("changeStatus", status);
         this._status = status;
@@ -95,7 +113,13 @@ export default class GameMgr extends cc.Component {
                 //TODO: 顯示結束畫面
                 cc.log("GAME END !!!");
                 this.GameEndWindow.active = true;
-                break;        
+                break;   
+            case GameConst.GAME_STATUS_FREE:
+                CommonFunc.getEventNode().emit(GameConst.CHANGE_HERO_STATUS, HeroStatus.FREE);
+                break;   
+            case GameConst.GAME_STATUS_PLAY:
+                CommonFunc.getEventNode().emit(GameConst.CHANGE_HERO_STATUS, HeroStatus.PLAY);
+                break;    
             default:
                 break;
         }
@@ -105,7 +129,10 @@ export default class GameMgr extends cc.Component {
         return this._status;
     }
 
-    //TODO: 用角色落地的座標與地板座標
+    public testStart():void {
+        this.changeStatus(GameConst.GAME_STATUS_PLAY);
+        this.node.getChildByName("GameStartWindow").active = false;
+    }
 
     // update (dt) {}
 }

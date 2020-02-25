@@ -10,15 +10,20 @@ export default class Hero extends cc.Component {
     _animState:any = null;
     _posX:number = -92;
     _posY:number = -57;
-    _status:HeroStatus = HeroStatus.PLAY;
+    _status:HeroStatus = HeroStatus.FREE;
     _collidionNumber:number = 0;
     
     onLoad() {
-        this._animation = this.node.getComponent(cc.Animation);    
+        this._animation = this.node.getComponent(cc.Animation);
+        this.addEvent(); 
     }
 
     start () {        
         this.run();
+    }
+
+    addEvent() {
+        CommonFunc.getEventNode().on(GameConst.CHANGE_HERO_STATUS, this.changeStatus, this);
     }
 
     public run():void {
@@ -85,7 +90,6 @@ export default class Hero extends cc.Component {
         if(this._collidionNumber <= 0) {
             // this.node.color = cc.Color.WHITE;
             this._collidionNumber = 0;
-            cc.log(this.node.y);
             
             //離開碰撞時下墜低於地板
             if(this.node.y <= this._posY) {
@@ -103,7 +107,13 @@ export default class Hero extends cc.Component {
             case HeroStatus.DEAD:
                 this.dead();
                 break;
-        
+            case HeroStatus.FREE:
+                this.free();
+                break;  
+            case HeroStatus.PLAY:
+                cc.log("play....");
+                this.run();
+                break;      
             default:
                 break;
         }
@@ -126,6 +136,15 @@ export default class Hero extends cc.Component {
                 CommonFunc.getEventNode().emit(GameConst.CHANGE_STATUS, GameConst.GAME_STATUS_END);
             })
         ));       
+    }
+
+    private free():void {
+        this.node.stopAllActions();
+        this.node.y = this._posY;
+    }
+
+    private play():void {
+
     }
     
     // update (dt) {}

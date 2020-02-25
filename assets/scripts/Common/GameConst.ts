@@ -3,6 +3,7 @@ export enum GameConst {
     GAME_STATUS_FREE = 1,
     GAME_STATUS_PLAY = 2,
     CHANGE_STATUS = 'CHANGE_STATUS',
+    CHANGE_HERO_STATUS = 'CHANGE_HERO_STATUS',
     GAME_END = 'GAME_END'
 };
 export const HeroAct = {
@@ -13,7 +14,8 @@ export const HeroAct = {
 
 export enum HeroStatus {
     DEAD = 0,
-    PLAY = 1,
+    FREE = 1,
+    PLAY = 2,
 };
 
 export const GroundsPos = [

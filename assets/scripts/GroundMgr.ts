@@ -97,9 +97,22 @@ export default class GroundMgr extends cc.Component {
         }
     }
 
+    private resetGround():void {
+        for(let i = 0, max = this.groundsNode.length; i < max; i++) {
+            for(let j = this.groundsNode[i].childrenCount-1, jMax = 0; j--) {
+                this.putGround(this.groundsNode[i][j]);
+            }
+        }
+    }
+
     update (dt) {
 
-        if(CommonFunc.getGameStatus() !== GameConst.GAME_STATUS_END) {
+        if(CommonFunc.getGameStatus() === GameConst.GAME_STATUS_END) {
+            return;
+        } else if(CommonFunc.getGameStatus() === GameConst.GAME_STATUS_FREE) {
+            this.resetGround();
+            this.initGrounds();
+        } else if(CommonFunc.getGameStatus() === GameConst.GAME_STATUS_PLAY) {
             for(let i = 0, max = this.groundsNode.length; i < max; i++) {
 
                 let x = this.groundsNode[i].x;

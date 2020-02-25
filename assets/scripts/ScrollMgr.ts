@@ -25,7 +25,7 @@ export default class ScrollMgr extends cc.Component {
     }
 
     update (dt: number) {
-        if(CommonFunc.getGameStatus() !== GameConst.GAME_STATUS_END) {
+        if(CommonFunc.getGameStatus() === GameConst.GAME_STATUS_PLAY) {
             for(let i = 0, max = this.moveChildren.length; i < max; i++) {
 
                 let x = this.moveChildren[i].x;
