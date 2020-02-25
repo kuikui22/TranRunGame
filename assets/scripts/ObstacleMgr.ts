@@ -1,4 +1,4 @@
-import { ComponentPos } from "./Common/GameConst";
+import { ComponentPos, GameConst } from "./Common/GameConst";
 import CommonFunc from "./Common/CommonFunc";
 
 
@@ -33,10 +33,12 @@ export default class ObstacleMgr extends cc.Component {
         let maxY = this.node.y + (this._height / 2);
         let minY = this.node.y - (this._height / 2);
         let hero = CommonFunc.getHero();
-        let heroPosX = hero.x;
-        let heroPosY = hero.y;
+        let heroPos = hero.convertToNodeSpaceAR(cc.v2(this.node.getPosition()));
+        cc.log(heroPos);
+        let heroPosX = heroPos.x;
+        let heroPosY = heroPos.y;
 
-        if(heroPosX <= maxX && heroPosX >= minX && heroPosY <= maxY && heroPosY >= minY) {
+        if((heroPosX <= maxX && heroPosX >= minX) && (heroPosY <= maxY && heroPosY >= minY)) {
             return true;
         }
 
@@ -46,9 +48,19 @@ export default class ObstacleMgr extends cc.Component {
     //TODO: 在每一幀的時候確認自己的包圍盒是否與人物的包圍盒相交
     //TODO: 如果與人物包圍盒相交則改變人物的座標
 
+
+
     update (dt) {
+        if(CommonFunc.getGameStatus() !== GameConst.GAME_STATUS_PLAY) {
+            return;
+        }
+
         if(this.isContact()) {
             cc.log("contact.........");
+            this.node.color = cc.Color.RED;
+            CommonFunc.changeHeroPos(this.node.x - (this._width / 2));
+        } else {
+            this.node.color = cc.Color.WHITE;
         }
     }
 }

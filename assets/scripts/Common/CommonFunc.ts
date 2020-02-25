@@ -19,4 +19,8 @@ export default class CommonFunc {
         public static getHero():cc.Node {
             return this.gameMgr._hero;
         }
+
+        public static changeHeroPos(x:number):void {
+            this.gameMgr._hero.x = x;
+        }
 }

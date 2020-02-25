@@ -63,6 +63,10 @@ export default class Hero extends cc.Component {
             return; 
         }
 
+        if(this._animState.name == HeroAct.ROLL) {
+            return;
+        }
+
         this._animState = this._animation.play(HeroAct.ROLL);
         this.node.y = ComponentPos.HERO_Y-8;
     }

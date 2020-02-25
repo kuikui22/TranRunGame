@@ -62,6 +62,8 @@ export default class GameMgr extends cc.Component {
 
     private addEvent():void {
         CommonFunc.getEventNode().on(GameConst.CHANGE_STATUS, this.changeStatus, this);
+        cc.systemEvent.on(cc.SystemEvent.EventType.KEY_DOWN, this.onKeyDown, this);
+        cc.systemEvent.on(cc.SystemEvent.EventType.KEY_UP, this.onKeyUp, this);
         this.jumpBtn.on(cc.Node.EventType.TOUCH_START, this.clickJumpBtn, this);
         this.rollBtn.on(cc.Node.EventType.TOUCH_START, this.clickRollBtn, this);
         this.rollBtn.on(cc.Node.EventType.TOUCH_END, this.clickRollBtnEnd, this);
@@ -94,6 +96,29 @@ export default class GameMgr extends cc.Component {
 
     public clickRollBtnEnd():void {
         this._heroScript.run();
+    }
+
+    public onKeyDown(event):void {
+        switch (event.keyCode) {
+            case cc.macro.KEY.up:
+                this.clickJumpBtn();
+                break;
+            case cc.macro.KEY.down:
+                this.clickRollBtn();
+                break;
+            default:
+                break;
+        }
+    }
+
+    public onKeyUp(event):void {
+        switch (event.keyCode) {
+            case cc.macro.KEY.down:
+                this.clickRollBtnEnd();
+                break;
+            default:
+                break;
+        }
     }
 
     public clickRestartBtn():void {
