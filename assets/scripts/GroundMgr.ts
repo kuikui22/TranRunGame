@@ -1,4 +1,4 @@
-import { GroundsPos, GameConst } from "./Common/GameConst";
+import { GroundsPos, GameConst, obstaclePos } from "./Common/GameConst";
 import GameMgr from "./GameMgr";
 import CommonFunc from "./Common/CommonFunc";
 
@@ -30,7 +30,9 @@ export default class GroundMgr extends cc.Component {
 
 
     //路障
-    private obstacleY = 51;
+    private _obstacleY = 51;
+    private _showObstacles = 12;
+
 
 
 
@@ -47,6 +49,7 @@ export default class GroundMgr extends cc.Component {
     private initGrounds():void {
         for(let i = 0, max = this.groundsNode.length; i < max; i++) {
             this.makeGround(this.groundsNode[i]);
+            this.makeObstacle(this.groundsNode[i]);
         }
     }
 
@@ -66,13 +69,36 @@ export default class GroundMgr extends cc.Component {
         }
     }
 
+    //節點上鋪上路障
+    private makeObstacle(gNode:cc.Node):void {
+        for(let i = 0, max = obstaclePos.length; i < max; i++) {
+            for(let j = 0, jMax = obstaclePos[i].length; j < jMax; j++) {
+                
+                if(obstaclePos[i][j] === 1) {
+                    let obstacle =  cc.instantiate(this.obstaclePrefab);
+                    let width = obstacle.width * this._groundScale;
+                    obstacle.y = this._obstacleY;
+                    obstacle.x = this._endPosX + (width * j);
+                    obstacle.parent = gNode;
+                }
+            }            
+        }
+    }
+
     //節點上鋪滿無間隔的地板
     private fullGround(gNode:cc.Node):void {
-        for(let i = 0; i < this._showGrounds; i++) {
-            let ground = this.popGround();
-            ground.y = this._posY;
-            ground.x = this._endPosX + ((ground.width * this._groundScale) * i);
-            ground.parent = this.node;
+        // for(let i = 0; i < this._showGrounds; i++) {
+        //     let ground = this.popGround();
+        //     ground.y = this._posY;
+        //     ground.x = this._endPosX + ((ground.width * this._groundScale) * i);
+        //     ground.parent = this.node;
+        // }
+
+        for(let i = 0; i < this._showObstacles; i++) {
+            let obstacle = cc.instantiate(this.obstaclePrefab);
+            obstacle.y = this._obstacleY;
+            obstacle.x = this._endPosX + ((obstacle.width * this._groundScale) * i) + 3;
+            obstacle.parent = gNode;
         }
     }
 

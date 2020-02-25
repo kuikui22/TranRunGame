@@ -15,4 +15,8 @@ export default class CommonFunc {
         public static getGameStatus():GameConst {
             return this.gameMgr.getStatus();
         }
+
+        public static getHero():cc.Node {
+            return this.gameMgr._hero;
+        }
 }

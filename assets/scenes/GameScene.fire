@@ -180,7 +180,7 @@
       "__type__": "cc.Vec3",
       "x": 0,
       "y": 0,
-      "z": 202.64994448555865
+      "z": 207.84609690826528
     },
     "_scale": {
       "__type__": "cc.Vec3",
@@ -3026,6 +3026,9 @@
     "_enabled": true,
     "groundPrefab": {
       "__uuid__": "916c9886-fdd6-443a-83d1-bed2d08ec8c5"
+    },
+    "obstaclePrefab": {
+      "__uuid__": "11d45fc1-4c52-413a-9cd7-2dfaf68e227c"
     },
     "groundsNode": [
       {
