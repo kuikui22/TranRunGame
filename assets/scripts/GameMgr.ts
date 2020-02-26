@@ -30,10 +30,14 @@ export default class GameMgr extends cc.Component {
     @property(cc.Node)
     cutdownNode: cc.Node = null;
 
+    @property(cc.Label)
+    scoreLabel: cc.Label = null;
+
     public _hero: cc.Node = null;
     public _heroScript = null;
     private _status = GameConst.GAME_STATUS_FREE;
     public _cutdownNum = 5;
+    private _score = 0;
 
     private static instance: GameMgr = null;
 	/**
@@ -62,6 +66,7 @@ export default class GameMgr extends cc.Component {
 
     private addEvent():void {
         CommonFunc.getEventNode().on(GameConst.CHANGE_STATUS, this.changeStatus, this);
+        CommonFunc.getEventNode().on(GameConst.CHANGE_SCORE, this.changeScore, this);
         cc.systemEvent.on(cc.SystemEvent.EventType.KEY_DOWN, this.onKeyDown, this);
         cc.systemEvent.on(cc.SystemEvent.EventType.KEY_UP, this.onKeyUp, this);
         this.jumpBtn.on(cc.Node.EventType.TOUCH_START, this.clickJumpBtn, this);
@@ -193,6 +198,11 @@ export default class GameMgr extends cc.Component {
 
     private startGame():void {
         CommonFunc.getEventNode().emit(GameConst.CHANGE_HERO_STATUS, HeroStatus.PLAY);
+    }
+
+    private changeScore(value:number):void {
+        this._score += value;
+        this.scoreLabel.string = this._score.toString();
     }
 
     // update (dt) {}

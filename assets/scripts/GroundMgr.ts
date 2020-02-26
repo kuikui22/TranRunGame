@@ -1,4 +1,4 @@
-import { GroundsPos, GameConst, obstaclePos } from "./Common/GameConst";
+import { GroundsPos, GameConst, obstaclePos, CoinPos } from "./Common/GameConst";
 import GameMgr from "./GameMgr";
 import CommonFunc from "./Common/CommonFunc";
 
@@ -54,6 +54,7 @@ export default class GroundMgr extends cc.Component {
         for(let i = 0, max = this.groundsNode.length; i < max; i++) {
             this.makeGround(this.groundsNode[i], i);
             this.makeObstacle(this.groundsNode[i], i);
+            this.makeCoin(this.groundsNode[i], i);
         }
     }
 
@@ -85,6 +86,22 @@ export default class GroundMgr extends cc.Component {
                 obstacle.y = this._obstacleY;
                 obstacle.x = this._endPosX + (width * i);
                 obstacle.parent = gNode;
+            }           
+        }
+    }
+
+    //節點上鋪上金幣
+    private makeCoin(gNode:cc.Node, index):void {
+        let coins = CoinPos[index];
+
+        for(let i = 0, max = coins.length; i < max; i++) {
+            
+            if(coins[i] === 1) {
+                let coin =  cc.instantiate(this.coinPrefab);
+                let width = coin.width * coin.scale;
+                coin.y = this._coinY;
+                coin.x = this._endPosX + (width * i);
+                coin.parent = gNode;
             }           
         }
     }
@@ -178,6 +195,9 @@ export default class GroundMgr extends cc.Component {
                     // x = this._gNodeResetX;
                     x = this.groundsNode[index].x + (this.groundsNode[i].width);
                     // cc.log(this.groundsNode[index].x, x, i);
+
+                    //TODO: 金幣重生
+
                 }
 
                 x += this._speed * dt;         

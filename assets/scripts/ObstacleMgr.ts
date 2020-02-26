@@ -9,9 +9,6 @@ export default class ObstacleMgr extends cc.Component {
 
     private _width = 0;
     private _height = 0;
-    private _contactY = 0;
-    private _contactX = 0;
-
 
 
     start () {
