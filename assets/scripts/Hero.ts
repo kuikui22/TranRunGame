@@ -62,7 +62,7 @@ export default class Hero extends cc.Component {
             cc.moveTo(0.2 ,cc.v2(ComponentPos.HERO_X, ComponentPos.HERO_Y-100)),
             cc.callFunc(function() {
                 if(self.node.y <= self._posY) {
-                    self.dead();
+                    self.changeStatus(HeroStatus.DEAD);
                 }
             })
         ));        
@@ -108,7 +108,7 @@ export default class Hero extends cc.Component {
             
             //離開碰撞時下墜低於地板
             if(this.node.y <= ComponentPos.HERO_Y) {
-                this.dead();
+                this.changeStatus(HeroStatus.DEAD);
             }
 
         }
@@ -139,9 +139,9 @@ export default class Hero extends cc.Component {
     }
 
     private dead():void {
-        if(this._status === HeroStatus.DEAD) {
-            return;
-        }
+        // if(this._status === HeroStatus.DEAD) {
+        //     return;
+        // }
 
         let self = this;
 
@@ -150,7 +150,6 @@ export default class Hero extends cc.Component {
         this.node.runAction(cc.sequence(
             cc.moveTo(0.1 ,cc.v2(ComponentPos.HERO_X, ComponentPos.HERO_Y-100)),
             cc.callFunc(function() {
-                self.changeStatus(HeroStatus.DEAD);
                 CommonFunc.getEventNode().emit(GameConst.CHANGE_STATUS, GameConst.GAME_STATUS_END);
             })
         ));       
@@ -166,7 +165,14 @@ export default class Hero extends cc.Component {
     }
     
 
-    //TODO: 判斷自己的座標如果被路障推超過畫面則狀態為死亡
+    update (dt) {
+        if(this._status === HeroStatus.PLAY) {
 
-    // update (dt) {}
+            //判斷自己的座標如果被路障推超過畫面則狀態為死亡
+            if(this.node.x <= ComponentPos.LEFT_DEAD_X) {
+                cc.log(this.node.x);
+                this.changeStatus(HeroStatus.DEAD);
+            }
+        }
+    }
 }

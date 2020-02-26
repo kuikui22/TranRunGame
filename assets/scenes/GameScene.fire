@@ -2747,7 +2747,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "ground",
+    "_name": "ground1",
     "_objFlags": 0,
     "_parent": {
       "__id__": 56
@@ -2801,7 +2801,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "ground",
+    "_name": "ground2",
     "_objFlags": 0,
     "_parent": {
       "__id__": 56
@@ -2855,7 +2855,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "ground",
+    "_name": "ground3",
     "_objFlags": 0,
     "_parent": {
       "__id__": 56
