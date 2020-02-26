@@ -20,7 +20,25 @@ export default class CommonFunc {
             return this.gameMgr._hero;
         }
 
+        public static getHeroCollisionNodeSize():Object {
+            let heroNode = this.getHero();
+            let scale = heroNode.scale;
+            let collisionNode = heroNode.getChildByName("CollisionNode");
+            
+            return {
+                height: collisionNode.height * scale,
+                width: collisionNode.width * scale
+            }
+        }
+
         public static changeHeroPos(x:number):void {
             this.gameMgr._hero.x = x;
+        }
+
+        public static convertWorldToNodePos(curNode:cc.Node, targetNode:cc.Node):cc.Vec2 {
+            let curPos = curNode.parent.convertToWorldSpaceAR(cc.v2(curNode.getPosition()));
+            let resultPos = targetNode.parent.convertToNodeSpaceAR(curPos);
+
+            return cc.v2(resultPos);
         }
 }

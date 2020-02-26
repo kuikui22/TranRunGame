@@ -33,11 +33,10 @@ export default class ObstacleMgr extends cc.Component {
         let maxY = this.node.y + (this._height / 2);
         let minY = this.node.y - (this._height / 2);
         let hero = CommonFunc.getHero();
-        let curPos = hero.parent.convertToWorldSpaceAR(cc.v2(hero.getPosition()));
-        let heroPos = this.node.parent.convertToNodeSpaceAR(curPos);
-        // cc.log(heroPos);
-        let heroPosX = heroPos.x;
-        let heroPosY = heroPos.y;
+        let heroPos = CommonFunc.convertWorldToNodePos(hero, this.node);
+        let heroCollisionSize = CommonFunc.getHeroCollisionNodeSize();
+        let heroPosX = heroPos.x + (heroCollisionSize["width"] / 2);
+        let heroPosY = heroPos.y + (heroCollisionSize["height"] / 2);
 
         if((heroPosX <= maxX && heroPosX >= minX) && (heroPosY <= maxY && heroPosY >= minY)) {
             return true;
@@ -46,20 +45,17 @@ export default class ObstacleMgr extends cc.Component {
         return false;
     }
 
-    //TODO: 在每一幀的時候確認自己的包圍盒是否與人物的包圍盒相交
-    //TODO: 如果與人物包圍盒相交則改變人物的座標
-
-
-
     update (dt) {
         if(CommonFunc.getGameStatus() !== GameConst.GAME_STATUS_PLAY) {
             return;
         }
 
         if(this.isContact()) {
-            cc.log("contact.........");
             this.node.color = cc.Color.RED;
-            CommonFunc.changeHeroPos(this.node.x - (this._width / 2));
+
+            let hero = CommonFunc.getHero();
+            let nowPos = CommonFunc.convertWorldToNodePos(this.node, hero);
+            CommonFunc.changeHeroPos(nowPos.x - (this._width / 2) - (CommonFunc.getHero().width * 0.5 / 2));
         } else {
             this.node.color = cc.Color.WHITE;
         }

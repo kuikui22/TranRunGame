@@ -6,15 +6,23 @@ const {ccclass, property} = cc._decorator;
 @ccclass
 export default class Hero extends cc.Component {
 
+    @property(cc.Node)
+    CollisionNode:cc.Node = null;
+
     _animation:cc.Animation = null;
     _animState:any = null;
     _posY:number = -57;
     _status:HeroStatus = HeroStatus.FREE;
     _collidionNumber:number = 0;
+    _width:number = 0;
+    _height:number = 0;
     
     onLoad() {
         this._animation = this.node.getComponent(cc.Animation);
         this.addEvent(); 
+        this._width = this.node.width * this.node.scale;
+        this._height = this.node.height * this.node.scale;
+
     }
 
     start () {        
@@ -30,8 +38,10 @@ export default class Hero extends cc.Component {
            return; 
         }
 
+        this.CollisionNode.height = this._height;
         this._animState = this._animation.play(HeroAct.RUN);
         this.node.y = ComponentPos.HERO_Y;
+        this.node.x = ComponentPos.HERO_X;
     }
 
     public jump():void {  
@@ -43,6 +53,7 @@ export default class Hero extends cc.Component {
             return;
         }
 
+        this.CollisionNode.height = this._height;
         let self = this;
         this.node.y = ComponentPos.HERO_Y;
         this._animState = this._animation.play(HeroAct.JUMP);
@@ -63,10 +74,11 @@ export default class Hero extends cc.Component {
             return; 
         }
 
-        if(this._animState.name == HeroAct.ROLL) {
+        if(this._animState.name == HeroAct.ROLL || (this._animState.name !== HeroAct.RUN && this._animState.isPlaying)) {
             return;
         }
 
+        this.CollisionNode.height -= 40;
         this._animState = this._animation.play(HeroAct.ROLL);
         this.node.y = ComponentPos.HERO_Y-8;
     }
@@ -154,7 +166,7 @@ export default class Hero extends cc.Component {
     }
     
 
-    //TODO: 判斷自己的座標
+    //TODO: 判斷自己的座標如果被路障推超過畫面則狀態為死亡
 
     // update (dt) {}
 }
