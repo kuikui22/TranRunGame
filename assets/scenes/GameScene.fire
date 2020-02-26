@@ -2921,6 +2921,9 @@
     "obstaclePrefab": {
       "__uuid__": "11d45fc1-4c52-413a-9cd7-2dfaf68e227c"
     },
+    "coinPrefab": {
+      "__uuid__": "c3ff4183-e1de-443a-895a-607e8b0f1eb7"
+    },
     "groundsNode": [
       {
         "__id__": 57

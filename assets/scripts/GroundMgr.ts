@@ -13,6 +13,9 @@ export default class GroundMgr extends cc.Component {
     @property(cc.Prefab)
     obstaclePrefab:cc.Prefab = null;
 
+    @property(cc.Prefab)
+    coinPrefab:cc.Prefab = null;
+
     @property(cc.Node)
     groundsNode:cc.Node[] = [];
 
@@ -35,9 +38,7 @@ export default class GroundMgr extends cc.Component {
 
     //金幣
     private _coinY = -1
-
-
-
+    private _showCoins = 15;
 
 
 
@@ -97,11 +98,18 @@ export default class GroundMgr extends cc.Component {
         //     ground.parent = this.node;
         // }
 
-        for(let i = 0; i < this._showObstacles; i++) {
-            let obstacle = cc.instantiate(this.obstaclePrefab);
-            obstacle.y = this._obstacleY;
-            obstacle.x = this._endPosX + ((obstacle.width * this._groundScale) * i) + 3;
-            obstacle.parent = gNode;
+        // for(let i = 0; i < this._showObstacles; i++) {
+        //     let obstacle = cc.instantiate(this.obstaclePrefab);
+        //     obstacle.y = this._obstacleY;
+        //     obstacle.x = this._endPosX + ((obstacle.width * this._groundScale) * i) + 3;
+        //     obstacle.parent = gNode;
+        // }
+
+        for(let i = 0; i < this._showCoins; i++) {
+            let coin = cc.instantiate(this.coinPrefab);
+            coin.y = this._coinY;
+            coin.x = this._endPosX + ((coin.width * coin.scale) * i) + 3;
+            coin.parent = gNode;
         }
     }
 
