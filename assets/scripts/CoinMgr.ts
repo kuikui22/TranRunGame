@@ -40,6 +40,19 @@ export default class CoinMgr extends cc.Component {
         return false;
     }
 
+    onEnable() {
+        this.node.runAction(cc.repeatForever(
+            cc.sequence(
+                cc.scaleTo(1.5, 0, 1),
+                cc.scaleTo(1.5, 1, 1)
+            )
+        ));
+    }
+
+    onDisable() {
+        this.node.stopAllActions();
+    }
+
     update (dt) {
         if(CommonFunc.getGameStatus() !== GameConst.GAME_STATUS_PLAY) {
             return;
