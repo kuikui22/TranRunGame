@@ -44,12 +44,13 @@ export default class GroundMgr extends cc.Component {
 
 
 
-    onLoad () {
+    onLoad () {        
         this.initGroundPools();
         GroundMgr.instance();
     }
 
     start () {
+        this.addEvent();
         this.initGrounds();
     }
 
@@ -59,6 +60,10 @@ export default class GroundMgr extends cc.Component {
         }
 
         return this._groundMgr;
+    }
+
+    private addEvent() {
+        CommonFunc.getEventNode().on(GameConst.SLOW_SPEED, this.changeSlowSpeed, this);
     }
 
     private initGrounds():void {
@@ -203,9 +208,7 @@ export default class GroundMgr extends cc.Component {
     }
 
     public changeSlowSpeed(speed:number):void {
-        cc.log(speed, "changeSlowSpeed...");
         this._slowSpeed = speed / 100;
-        cc.log(this._slowSpeed,this._speed * this._slowSpeed, "changeSlowSpeed...");
     }
 
     update (dt) {
@@ -230,7 +233,7 @@ export default class GroundMgr extends cc.Component {
                     //TODO: 金幣重生
                     this.resetCoin(this.groundsNode[i], i);
                 }
-
+                
                 x += (this._speed * this._slowSpeed) * dt;
                 this.groundsNode[i].x = x;
             }     

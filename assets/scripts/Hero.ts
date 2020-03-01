@@ -41,7 +41,13 @@ export default class Hero extends cc.Component {
         this.CollisionNode.height = this._height;
         this._animState = this._animation.play(HeroAct.RUN);
         this.node.y = ComponentPos.HERO_Y;
-        this.node.x = ComponentPos.HERO_X;
+
+        if(this.node.x != ComponentPos.HERO_X) {
+            this.node.stopAllActions();
+            this.node.runAction(cc.moveTo(1, cc.v2(ComponentPos.HERO_X, ComponentPos.HERO_Y)));
+        }
+
+        // this.node.x = ComponentPos.HERO_X;
     }
 
     public jump():void {  
@@ -61,7 +67,7 @@ export default class Hero extends cc.Component {
             cc.moveTo(0.3 ,cc.v2(ComponentPos.HERO_X, ComponentPos.HERO_Y+60)),
             cc.moveTo(0.2 ,cc.v2(ComponentPos.HERO_X, ComponentPos.HERO_Y-100)),
             cc.callFunc(function() {
-                if(self.node.y <= self._posY) {
+                if(self.node.y < self._posY) {
                     self.changeStatus(HeroStatus.DEAD);
                 }
             })
@@ -170,7 +176,6 @@ export default class Hero extends cc.Component {
 
             //判斷自己的座標如果被路障推超過畫面則狀態為死亡
             if(this.node.x <= ComponentPos.LEFT_DEAD_X) {
-                cc.log(this.node.x);
                 this.changeStatus(HeroStatus.DEAD);
             }
         }

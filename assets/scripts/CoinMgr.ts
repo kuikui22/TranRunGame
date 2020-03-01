@@ -4,7 +4,7 @@ import { GameConst } from "./Common/GameConst";
 const {ccclass, property} = cc._decorator;
 
 @ccclass
-export default class NewClass extends cc.Component {
+export default class CoinMgr extends cc.Component {
 
     private _width = 0;
     private _height = 0;

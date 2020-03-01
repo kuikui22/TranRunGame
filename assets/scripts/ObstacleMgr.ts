@@ -54,9 +54,10 @@ export default class ObstacleMgr extends cc.Component {
             let hero = CommonFunc.getHero();
             let nowPos = CommonFunc.convertWorldToNodePos(this.node, hero);
             CommonFunc.changeHeroPos(nowPos.x - (this._width / 2) - (CommonFunc.getHero().width * 0.5 / 2));
-            GroundMgr.instance().changeSlowSpeed(10);
+            CommonFunc.getEventNode().emit(GameConst.SLOW_SPEED, 10);
         } else {
             this.node.color = cc.Color.WHITE;
+            CommonFunc.getEventNode().emit(GameConst.SLOW_SPEED, 100);
         }
     }
 }
