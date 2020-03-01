@@ -30,6 +30,8 @@ export default class GroundMgr extends cc.Component {
     private _groundScale = 0.5;
     private _groundPools:cc.NodePool = new cc.NodePool();
     public _gameMgr = null;
+    private _slowSpeed = 1;
+    private static _groundMgr = null;
 
 
     //路障
@@ -44,10 +46,19 @@ export default class GroundMgr extends cc.Component {
 
     onLoad () {
         this.initGroundPools();
+        GroundMgr.instance();
     }
 
     start () {
         this.initGrounds();
+    }
+
+    public static instance() {
+        if(!this._groundMgr) {
+            this._groundMgr = new GroundMgr();
+        }
+
+        return this._groundMgr;
     }
 
     private initGrounds():void {
@@ -101,8 +112,22 @@ export default class GroundMgr extends cc.Component {
                 let width = coin.width * coin.scale;
                 coin.y = this._coinY;
                 coin.x = this._endPosX + (width * i);
+                coin.name = "Coin";
                 coin.parent = gNode;
             }           
+        }
+    }
+
+    //重置節點上金幣
+    private resetCoin(gNode:cc.Node, index):void {
+        let coins = CoinPos[index];
+        let j = 0;
+
+        for(let i = 0, max = gNode.childrenCount; i < max; i++) {
+            if(!gNode.children[i] || gNode.children[i].name != "Coin") continue;
+
+            gNode.children[i].active = (coins[j] === 1) ? true : false;
+            j+= 1;
         }
     }
 
@@ -177,6 +202,12 @@ export default class GroundMgr extends cc.Component {
         // this.initGrounds();
     }
 
+    public changeSlowSpeed(speed:number):void {
+        cc.log(speed, "changeSlowSpeed...");
+        this._slowSpeed = speed / 100;
+        cc.log(this._slowSpeed,this._speed * this._slowSpeed, "changeSlowSpeed...");
+    }
+
     update (dt) {
 
         if(CommonFunc.getGameStatus() === GameConst.GAME_STATUS_END) {
@@ -197,10 +228,10 @@ export default class GroundMgr extends cc.Component {
                     // cc.log(this.groundsNode[index].x, x, i);
 
                     //TODO: 金幣重生
-
+                    this.resetCoin(this.groundsNode[i], i);
                 }
 
-                x += this._speed * dt;         
+                x += (this._speed * this._slowSpeed) * dt;
                 this.groundsNode[i].x = x;
             }     
 

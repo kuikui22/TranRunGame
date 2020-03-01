@@ -1,5 +1,6 @@
 import { ComponentPos, GameConst } from "./Common/GameConst";
 import CommonFunc from "./Common/CommonFunc";
+import GroundMgr from "./GroundMgr";
 
 
 const {ccclass, property} = cc._decorator;
@@ -53,6 +54,7 @@ export default class ObstacleMgr extends cc.Component {
             let hero = CommonFunc.getHero();
             let nowPos = CommonFunc.convertWorldToNodePos(this.node, hero);
             CommonFunc.changeHeroPos(nowPos.x - (this._width / 2) - (CommonFunc.getHero().width * 0.5 / 2));
+            GroundMgr.instance().changeSlowSpeed(10);
         } else {
             this.node.color = cc.Color.WHITE;
         }
